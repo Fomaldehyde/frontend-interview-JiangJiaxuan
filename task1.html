@@ -1,0 +1,73 @@
+<!-- 用HTML+CSS实现一个可拖拽的积木块（尺寸100x100px，
+背景色为蓝色），拖拽时积木块透明度变为0.5，并限制拖拽范围在父容器（500x500px）内。 -->
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>可拖拽积木块</title>
+    <style>
+        /* 父容器样式 */
+        #container {
+            width: 500px;
+            height: 500px;
+            border: 2px solid #000;
+            position: relative;
+            overflow: hidden; 
+        }
+
+        /* 积木块样式 */
+        #block {
+            width: 100px;
+            height: 100px;
+            background-color: blue;
+            position: absolute;
+            cursor: move;
+        }
+
+        /* 拖拽时的透明度变化 */
+        #block.dragging {
+            opacity: 0.5;
+        }
+    </style>
+</head>
+<body>
+    <div id="container">
+        <div id="block"></div>
+    </div>
+
+    <script>
+        const block = document.getElementById('block');
+        const container = document.getElementById('container');
+        let isDragging = false;
+        let offsetX , offsetY;
+
+        block.addEventListener('mousedown',(event)=>{
+            isDragging = true;
+            block.classList.add('dragging');
+            offsetX = event.clientX - block.offsetLeft;
+            offsetY = event.clientY - block.offsetTop;
+        })
+
+        document.addEventListener('mousemove',(event)=>{
+            if(isDragging){
+                let x = event.clientX - offsetX;
+                let y = event.clientY - offsetY;
+                //限制不出框
+                x = Math.max(0,Math.min(x,container.clientWidth - block.clientWidth));
+                y = Math.max(0,Math.min(y,container.clientHeight - block.clientHeight));
+                block.style.left = x + 'px';
+                block.style.top = y + 'px';
+            }
+        })
+
+        document.addEventListener('mouseup',(event)=>{
+            isDragging = false;
+            block.classList.remove('dragging');
+        })
+
+
+    </script>
+</body>
+</html>
